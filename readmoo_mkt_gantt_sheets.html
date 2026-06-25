@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>活動檔期甘特圖</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --bg-tertiary: #eeece6;
+    --text-primary: #1a1a18;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --border-tertiary: rgba(0,0,0,0.12);
+    --border-secondary: rgba(0,0,0,0.22);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #1e1e1c;
+      --bg-secondary: #2a2a27;
+      --bg-tertiary: #323230;
+      --text-primary: #f0ede6;
+      --text-secondary: #a8a69f;
+      --text-tertiary: #6e6d69;
+      --border-tertiary: rgba(255,255,255,0.1);
+      --border-secondary: rgba(255,255,255,0.18);
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 1.5rem;
+  }
+  .container { max-width: 1000px; margin: 0 auto; }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .page-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .page-title i { font-size: 22px; color: #534AB7; }
+
+  .sync-info {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sync-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #888;
+    flex-shrink: 0;
+  }
+  .sync-dot.ok  { background: #1D9E75; }
+  .sync-dot.err { background: #E24B4A; }
+
+  .card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .spacer { flex: 1; min-width: 8px; }
+
+  .btn {
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border-secondary);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: background .12s;
+  }
+  .btn:hover { background: var(--bg-secondary); }
+  .btn:active { transform: scale(0.98); }
+  .btn.icon-only { padding: 6px 10px; }
+
+  select {
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border-secondary);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .range-label { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
+
+  /* filter pills */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1rem;
+  }
+  .pill {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border-secondary);
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all .12s;
+    user-select: none;
+  }
+  .pill .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pill.active { border-width: 1.5px; font-weight: 500; }
+  .pill.inactive { opacity: .45; }
+
+  /* gantt */
+  .gantt-wrap { overflow-x: auto; }
+  .gantt {
+    min-width: 680px;
+    border: 0.5px solid var(--border-tertiary);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .gantt-head {
+    display: grid;
+    background: var(--bg-secondary);
+    border-bottom: 0.5px solid var(--border-tertiary);
+  }
+  .head-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-right: 0.5px solid var(--border-tertiary);
+  }
+  .months-row { display: flex; }
+  .month-cell {
+    font-size: 11px;
+    color: var(--text-secondary);
+    padding: 3px 6px;
+    border-right: 0.5px solid var(--border-tertiary);
+    text-align: center;
+    flex-shrink: 0;
+    background: var(--bg-secondary);
+  }
+  .days-row { display: flex; }
+  .day-cell {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-align: center;
+    border-right: 0.5px solid var(--border-tertiary);
+    padding: 4px 2px;
+    flex-shrink: 0;
+  }
+  .day-cell.is-today { color: #E24B4A; font-weight: 500; }
+
+  .gantt-row {
+    display: grid;
+    border-bottom: 0.5px solid var(--border-tertiary);
+    min-height: 46px;
+  }
+  .gantt-row:last-child { border-bottom: none; }
+  .row-info {
+    padding: 8px 12px;
+    border-right: 0.5px solid var(--border-tertiary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    overflow: hidden;
+  }
+  .row-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .row-badge {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    display: inline-block;
+    width: fit-content;
+  }
+  .row-timeline { position: relative; overflow: hidden; min-height: 46px; }
+  .bar {
+    position: absolute;
+    top: 8px; bottom: 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity .15s;
+  }
+  .today-line {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 1.5px;
+    background: #E24B4A;
+    opacity: .6;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3.5rem 1rem;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+  .empty-state i { font-size: 32px; display: block; margin: 0 auto 10px; opacity: .4; }
+
+  /* legend */
+  .legend-wrap {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-top: 0.75rem;
+    border-top: 0.5px solid var(--border-tertiary);
+    margin-top: 1rem;
+  }
+  .legend-group-title {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-bottom: 5px;
+    font-weight: 500;
+    letter-spacing: .04em;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* loading */
+  .loading {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-tertiary);
+    font-size: 14px;
+  }
+  .spinner {
+    width: 24px; height: 24px;
+    border: 2px solid var(--border-tertiary);
+    border-top-color: #534AB7;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="page-header">
+    <div class="page-title">
+      <i class="ti ti-calendar-event"></i>
+      活動檔期甘特圖
+    </div>
+    <div class="sync-info">
+      <span class="sync-dot" id="syncDot"></span>
+      <span id="syncLabel">載入中…</span>
+      <button class="btn icon-only" id="refreshBtn" title="重新讀取"><i class="ti ti-refresh"></i></button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <button class="btn icon-only" id="prevBtn"><i class="ti ti-chevron-left"></i></button>
+      <span class="range-label" id="rangeLabel"></span>
+      <button class="btn icon-only" id="nextBtn"><i class="ti ti-chevron-right"></i></button>
+      <button class="btn" id="todayBtn">今天</button>
+      <select id="viewSel">
+        <option value="30">30天</option>
+        <option value="60" selected>60天</option>
+        <option value="90">90天</option>
+        <option value="180">180天</option>
+      </select>
+      <div class="spacer"></div>
+    </div>
+
+    <div class="filters" id="filters"></div>
+
+    <div class="gantt-wrap">
+      <div class="gantt" id="gantt">
+        <div class="loading"><div class="spinner"></div>從 Google Sheets 讀取資料中…</div>
+      </div>
+    </div>
+
+    <div class="legend-wrap" id="legendArea"></div>
+  </div>
+
+</div>
+
+<script>
+// ── 設定區 ──────────────────────────────────────────
+const SHEET_ID   = '1Y9Lvd9WWhSosPDQewrWEDShJTpKlFfMuryEGYhzUYvo';
+const SHEET_NAME = '總覽';
+// ────────────────────────────────────────────────────
+
+const CATS = {
+  '品牌異業':      { color: '#1D9E75', text: '#fff', group: 'main' },
+  '會員活動':      { color: '#534AB7', text: '#fff', group: 'main' },
+  '廣告置入':      { color: '#378ADD', text: '#fff', group: 'main' },
+  'KOL - 導購分潤':{ color: '#D85A30', text: '#fff', group: 'kol'  },
+  'KOL - 業配置入':{ color: '#BA7517', text: '#fff', group: 'kol'  },
+  'KOL - 綜合':   { color: '#D4537E', text: '#fff', group: 'kol'  },
+};
+function getCat(name) {
+  return CATS[name] || { color: '#888780', text: '#fff', group: 'main' };
+}
+
+let viewDays    = 60;
+let offsetDays  = 0;
+let allEvents   = [];
+let activeFilters = new Set(Object.keys(CATS));
+
+// ── 日期工具 ────────────────────────────────────────
+function today()       { const d = new Date(); d.setHours(0,0,0,0); return d; }
+function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
+function toISO(d)      { return d.toISOString().slice(0,10); }
+function fromISO(s)    { const d = new Date(s + 'T00:00:00'); d.setHours(0,0,0,0); return d; }
+function diffDays(a,b) { return Math.round((b - a) / 86400000); }
+
+// 解析 2026/3/9 或 2026-03-09
+function parseDate(s) {
+  if (!s) return null;
+  s = s.trim().replace(/\//g, '-');
+  const parts = s.split('-');
+  if (parts.length !== 3) return null;
+  const y = parseInt(parts[0]), m = parseInt(parts[1]) - 1, d = parseInt(parts[2]);
+  const dt = new Date(y, m, d);
+  dt.setHours(0,0,0,0);
+  return isNaN(dt.getTime()) ? null : dt;
+}
+
+// ── 讀取 Google Sheets ──────────────────────────────
+async function fetchSheets() {
+  setSyncState('loading');
+  const encoded = encodeURIComponent(SHEET_NAME);
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encoded}`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  const text = await resp.text();
+  return parseCSV(text);
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  // 第一行是標題：活動開始,活動結束,活動名稱,活動分類
+  const events = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = splitCSVLine(lines[i]);
+    if (cols.length < 4) continue;
+    const start = parseDate(cols[0]);
+    const end   = parseDate(cols[1]);
+    const name  = cols[2].trim();
+    const cat   = cols[3].trim();
+    if (!start || !end || !name) continue;
+    events.push({ id: `r${i}`, start: toISO(start), end: toISO(end), name, cat });
+  }
+  return events;
+}
+
+// 簡易 CSV 解析（處理引號）
+function splitCSVLine(line) {
+  const result = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { inQ = !inQ; continue; }
+    if (c === ',' && !inQ) { result.push(cur); cur = ''; continue; }
+    cur += c;
+  }
+  result.push(cur);
+  return result;
+}
+
+function setSyncState(state, time) {
+  const dot   = document.getElementById('syncDot');
+  const label = document.getElementById('syncLabel');
+  dot.className = 'sync-dot';
+  if (state === 'ok') {
+    dot.classList.add('ok');
+    label.textContent = `已同步 ${time}`;
+  } else if (state === 'err') {
+    dot.classList.add('err');
+    label.textContent = '讀取失敗，請確認試算表已公開';
+  } else {
+    label.textContent = '載入中…';
+  }
+}
+
+async function loadAndRender() {
+  try {
+    allEvents = await fetchSheets();
+    const now = new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'});
+    setSyncState('ok', now);
+    buildFilters();
+    render();
+  } catch(e) {
+    setSyncState('err');
+    document.getElementById('gantt').innerHTML =
+      `<div class="empty-state"><i class="ti ti-wifi-off"></i>無法讀取試算表<br><small style="opacity:.6">請確認「知道連結的人可以檢視」已開啟</small></div>`;
+  }
+}
+
+// ── 篩選器 ──────────────────────────────────────────
+function buildFilters() {
+  const usedCats = [...new Set(allEvents.map(e => e.cat))].filter(c => CATS[c]);
+  const container = document.getElementById('filters');
+  container.innerHTML = '';
+
+  // 全選
+  const allPill = document.createElement('span');
+  allPill.className = 'pill ' + (activeFilters.size === usedCats.length ? 'active' : 'inactive');
+  allPill.style.borderColor = activeFilters.size === usedCats.length ? '#534AB7' : '';
+  allPill.style.color       = activeFilters.size === usedCats.length ? '#534AB7' : '';
+  allPill.innerHTML = '全部顯示';
+  allPill.addEventListener('click', () => {
+    activeFilters = new Set(Object.keys(CATS));
+    buildFilters(); render();
+  });
+  container.appendChild(allPill);
+
+  for (const cat of usedCats) {
+    const c    = getCat(cat);
+    const pill = document.createElement('span');
+    const on   = activeFilters.has(cat);
+    pill.className = 'pill ' + (on ? 'active' : 'inactive');
+    if (on) { pill.style.borderColor = c.color; pill.style.color = c.color; }
+    pill.innerHTML = `<span class="dot" style="background:${c.color}"></span>${cat}`;
+    pill.addEventListener('click', () => {
+      if (activeFilters.has(cat)) activeFilters.delete(cat);
+      else activeFilters.add(cat);
+      buildFilters(); render();
+    });
+    container.appendChild(pill);
+  }
+}
+
+// ── 渲染甘特圖 ──────────────────────────────────────
+function render() {
+  const base = addDays(today(), offsetDays);
+  const end  = addDays(base, viewDays - 1);
+
+  document.getElementById('rangeLabel').textContent =
+    base.toLocaleDateString('zh-TW', {year:'numeric', month:'short', day:'numeric'}) + ' – ' +
+    end.toLocaleDateString('zh-TW', {month:'short', day:'numeric'});
+
+  const DAY_W  = Math.max(12, Math.floor(600 / viewDays));
+  const INFO_W = 190;
+  const todayISO = toISO(today());
+
+  // 月份 + 日期標題
+  let monthsHtml = '', daysHtml = '';
+  let cur = new Date(base), monthName = '', monthStart = 0, segments = [];
+  for (let i = 0; i < viewDays; i++) {
+    const mn = cur.toLocaleDateString('zh-TW', {month:'short'});
+    if (mn !== monthName) {
+      if (monthName) segments.push({name: monthName, count: i - monthStart});
+      monthName = mn; monthStart = i;
+    }
+    const isT = toISO(cur) === todayISO;
+    daysHtml += `<div class="day-cell${isT?' is-today':''}" style="width:${DAY_W}px">${cur.getDate()}</div>`;
+    cur = addDays(cur, 1);
+  }
+  segments.push({name: monthName, count: viewDays - monthStart});
+  for (const s of segments)
+    monthsHtml += `<div class="month-cell" style="width:${s.count * DAY_W}px">${s.name}</div>`;
+
+  const todayOff = diffDays(base, today());
+  const todayPx  = (todayOff >= 0 && todayOff < viewDays) ? todayOff * DAY_W : -9999;
+
+  // 篩選 + 視窗內的活動
+  const catOrder = Object.keys(CATS);
+  const visible = allEvents
+    .filter(e => {
+      if (!activeFilters.has(e.cat)) return false;
+      const s = fromISO(e.start), en = fromISO(e.end);
+      return en >= base && s <= end;
+    })
+    .sort((a, b) => {
+      const oi = catOrder.indexOf(a.cat) - catOrder.indexOf(b.cat);
+      return oi !== 0 ? oi : a.start.localeCompare(b.start);
+    });
+
+  let rows = '';
+  if (visible.length === 0) {
+    rows = `<div class="empty-state"><i class="ti ti-calendar-off"></i>這個時間範圍內沒有符合的活動</div>`;
+  } else {
+    for (const e of visible) {
+      const s   = fromISO(e.start), en = fromISO(e.end);
+      const s0  = Math.max(0, diffDays(base, s));
+      const e0  = Math.min(viewDays, diffDays(base, en) + 1);
+      const bL  = s0 * DAY_W;
+      const bW  = Math.max(DAY_W, (e0 - s0) * DAY_W);
+      const cat = getCat(e.cat);
+      rows += `
+        <div class="gantt-row" style="grid-template-columns:${INFO_W}px 1fr">
+          <div class="row-info">
+            <div class="row-name" title="${e.name}">${e.name}</div>
+            <span class="row-badge" style="background:${cat.color}22;color:${cat.color}">${e.cat}</span>
+          </div>
+          <div class="row-timeline">
+            <div class="today-line" style="left:${todayPx}px"></div>
+            <div class="bar" style="left:${bL}px;width:${bW}px;background:${cat.color};color:${cat.text}"
+                 title="${e.name}｜${e.start} ~ ${e.end}">
+              ${bW > 52 ? e.name : ''}
+            </div>
+          </div>
+        </div>`;
+    }
+  }
+
+  document.getElementById('gantt').innerHTML = `
+    <div class="gantt-head" style="grid-template-columns:${INFO_W}px 1fr">
+      <div class="head-label">活動名稱</div>
+      <div>
+        <div class="months-row">${monthsHtml}</div>
+        <div class="days-row">${daysHtml}</div>
+      </div>
+    </div>
+    ${rows}
+  `;
+
+  renderLegend();
+}
+
+function renderLegend() {
+  const usedCats = [...new Set(allEvents.map(e => e.cat))].filter(c => CATS[c]);
+  const main = usedCats.filter(k => CATS[k].group === 'main');
+  const kol  = usedCats.filter(k => CATS[k].group === 'kol');
+  let html = '';
+  if (main.length) {
+    html += '<div>';
+    for (const k of main) {
+      const c = CATS[k];
+      html += `<div class="legend-item"><span class="legend-dot" style="background:${c.color}"></span>${k}</div>`;
+    }
+    html += '</div>';
+  }
+  if (kol.length) {
+    html += '<div><div class="legend-group-title">KOL</div>';
+    for (const k of kol) {
+      const c = CATS[k];
+      html += `<div class="legend-item"><span class="legend-dot" style="background:${c.color}"></span>${k.replace('KOL - ','')}</div>`;
+    }
+    html += '</div>';
+  }
+  document.getElementById('legendArea').innerHTML = html;
+}
+
+// ── 事件綁定 ────────────────────────────────────────
+document.getElementById('prevBtn').addEventListener('click',  () => { offsetDays -= viewDays; render(); });
+document.getElementById('nextBtn').addEventListener('click',  () => { offsetDays += viewDays; render(); });
+document.getElementById('todayBtn').addEventListener('click', () => { offsetDays = 0; render(); });
+document.getElementById('viewSel').addEventListener('change', e => { viewDays = parseInt(e.target.value); render(); });
+document.getElementById('refreshBtn').addEventListener('click', loadAndRender);
+
+loadAndRender();
+</script>
+</body>
+</html>
