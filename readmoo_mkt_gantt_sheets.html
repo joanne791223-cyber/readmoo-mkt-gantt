@@ -9,291 +9,245 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f5f5f3;
-    --bg-tertiary: #eeece6;
-    --text-primary: #1a1a18;
-    --text-secondary: #5f5e5a;
-    --text-tertiary: #888780;
-    --border-tertiary: rgba(0,0,0,0.12);
-    --border-secondary: rgba(0,0,0,0.22);
-    --radius-md: 8px;
-    --radius-lg: 12px;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg-primary: #1e1e1c;
-      --bg-secondary: #2a2a27;
-      --bg-tertiary: #323230;
-      --text-primary: #f0ede6;
-      --text-secondary: #a8a69f;
-      --text-tertiary: #6e6d69;
-      --border-tertiary: rgba(255,255,255,0.1);
-      --border-secondary: rgba(255,255,255,0.18);
-    }
+    --bg-page:      #f2f0ec;
+    --bg-card:      #ffffff;
+    --bg-soft:      #f7f6f3;
+    --text-1:       #1f1e1c;
+    --text-2:       #5f5e5a;
+    --text-3:       #8e8d87;
+    --line:         #e4e2dc;
+    --line-strong:  #cfcdc6;
+    --accent:       #3C3489;
+    --radius-md:    8px;
+    --radius-lg:    12px;
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    background: var(--bg-page);
+    color: var(--text-1);
     min-height: 100vh;
-    padding: 1.5rem;
+    padding: 1.5rem 1.25rem 3rem;
+    -webkit-font-smoothing: antialiased;
   }
-  .container { max-width: 1000px; margin: 0 auto; }
+  .container { max-width: 1060px; margin: 0 auto; }
 
+  /* ── header ── */
   .page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.25rem;
-    flex-wrap: wrap;
-    gap: 8px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px;
   }
   .page-title {
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 20px; font-weight: 600; letter-spacing: -.01em;
+    display: flex; align-items: center; gap: 9px;
   }
-  .page-title i { font-size: 22px; color: #534AB7; }
+  .page-title i { font-size: 22px; color: var(--accent); }
 
   .sync-info {
-    font-size: 12px;
-    color: var(--text-tertiary);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-size: 12px; color: var(--text-3);
+    display: flex; align-items: center; gap: 7px;
   }
-  .sync-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: #888;
-    flex-shrink: 0;
-  }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #b6b4ad; flex-shrink: 0; }
   .sync-dot.ok  { background: #1D9E75; }
   .sync-dot.err { background: #E24B4A; }
 
+  /* ── card ── */
   .card {
-    background: var(--bg-primary);
-    border: 0.5px solid var(--border-tertiary);
+    background: var(--bg-card);
+    border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 1rem;
+    padding: 1.25rem 1.4rem 1.4rem;
   }
 
-  .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 1.25rem;
+  /* ── controls ── */
+  .controls {
+    display: flex; align-items: flex-end; gap: 10px;
+    flex-wrap: wrap; padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line); margin-bottom: 1rem;
   }
-  .spacer { flex: 1; min-width: 8px; }
+  .ctrl-group { display: flex; flex-direction: column; gap: 4px; }
+  .ctrl-group label {
+    font-size: 11px; color: var(--text-3);
+    letter-spacing: .03em; font-weight: 500;
+  }
+  .ctrl-row { display: flex; align-items: center; gap: 6px; }
+
+  input[type="date"], select {
+    font-family: inherit; font-size: 13px;
+    padding: 6px 9px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line-strong);
+    background: var(--bg-card); color: var(--text-1);
+    cursor: pointer;
+  }
+  input[type="date"]:focus, select:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(60,52,137,.12);
+  }
+  .date-sep { color: var(--text-3); font-size: 13px; }
 
   .btn {
-    font-size: 13px;
-    padding: 6px 14px;
+    font-family: inherit; font-size: 13px;
+    padding: 6px 13px;
     border-radius: var(--radius-md);
-    border: 0.5px solid var(--border-secondary);
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-    font-family: inherit;
-    transition: background .12s;
+    border: 1px solid var(--line-strong);
+    background: var(--bg-card); color: var(--text-1);
+    cursor: pointer; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: background .12s, border-color .12s;
   }
-  .btn:hover { background: var(--bg-secondary); }
-  .btn:active { transform: scale(0.98); }
-  .btn.icon-only { padding: 6px 10px; }
+  .btn:hover { background: var(--bg-soft); border-color: var(--text-3); }
+  .btn:active { transform: scale(.98); }
+  .btn.icon-only { padding: 6px 9px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { background: #4b42a8; border-color: #4b42a8; }
 
-  select {
-    font-size: 13px;
-    padding: 6px 10px;
-    border-radius: var(--radius-md);
-    border: 0.5px solid var(--border-secondary);
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: inherit;
-    cursor: pointer;
-  }
-
-  .range-label { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
-
-  /* filter pills */
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 1rem;
-  }
-  .pill {
-    font-size: 12px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    border: 0.5px solid var(--border-secondary);
-    background: var(--bg-primary);
-    color: var(--text-secondary);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
+  .preset-row { display: flex; gap: 5px; flex-wrap: wrap; }
+  .preset {
+    font-family: inherit; font-size: 12px;
+    padding: 5px 11px; border-radius: 20px;
+    border: 1px solid var(--line-strong);
+    background: var(--bg-card); color: var(--text-2);
+    cursor: pointer; white-space: nowrap;
     transition: all .12s;
-    user-select: none;
   }
-  .pill .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .pill.active { border-width: 1.5px; font-weight: 500; }
-  .pill.inactive { opacity: .45; }
+  .preset:hover { background: var(--bg-soft); }
+  .preset.on {
+    background: var(--accent); border-color: var(--accent);
+    color: #fff; font-weight: 500;
+  }
 
-  /* gantt */
+  .spacer { flex: 1; min-width: 4px; }
+
+  /* ── filters ── */
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
+  .pill {
+    font-size: 12px; padding: 4px 11px;
+    border-radius: 20px;
+    border: 1px solid var(--line-strong);
+    background: var(--bg-card); color: var(--text-2);
+    cursor: pointer; user-select: none;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all .12s;
+  }
+  .pill:hover { background: var(--bg-soft); }
+  .pill .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pill.on { font-weight: 500; }
+  .pill.off { opacity: .4; }
+
+  /* ── gantt ── */
   .gantt-wrap { overflow-x: auto; }
   .gantt {
-    min-width: 680px;
-    border: 0.5px solid var(--border-tertiary);
+    min-width: 700px;
+    border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
   .gantt-head {
-    display: grid;
-    background: var(--bg-secondary);
-    border-bottom: 0.5px solid var(--border-tertiary);
+    display: grid; background: var(--bg-soft);
+    border-bottom: 1px solid var(--line);
   }
   .head-label {
-    font-size: 12px;
-    color: var(--text-secondary);
-    padding: 6px 12px;
-    border-right: 0.5px solid var(--border-tertiary);
+    font-size: 12px; color: var(--text-2); font-weight: 500;
+    padding: 8px 12px; border-right: 1px solid var(--line);
+    display: flex; align-items: center;
   }
-  .months-row { display: flex; }
+  .months-row { display: flex; border-bottom: 1px solid var(--line); }
   .month-cell {
-    font-size: 11px;
-    color: var(--text-secondary);
-    padding: 3px 6px;
-    border-right: 0.5px solid var(--border-tertiary);
-    text-align: center;
-    flex-shrink: 0;
-    background: var(--bg-secondary);
+    font-size: 11px; color: var(--text-2); font-weight: 500;
+    padding: 4px 6px; border-right: 1px solid var(--line);
+    text-align: center; flex-shrink: 0; white-space: nowrap; overflow: hidden;
   }
-  .days-row { display: flex; }
-  .day-cell {
-    font-size: 11px;
-    color: var(--text-tertiary);
-    text-align: center;
-    border-right: 0.5px solid var(--border-tertiary);
-    padding: 4px 2px;
-    flex-shrink: 0;
+  .ticks-row { display: flex; }
+  .tick-cell {
+    font-size: 10px; color: var(--text-3);
+    text-align: center; border-right: 1px solid var(--line);
+    padding: 4px 1px; flex-shrink: 0; overflow: hidden; white-space: nowrap;
   }
-  .day-cell.is-today { color: #E24B4A; font-weight: 500; }
+  .tick-cell.is-today { color: #E24B4A; font-weight: 600; }
+  .tick-cell.weekend { background: rgba(0,0,0,.022); }
 
   .gantt-row {
-    display: grid;
-    border-bottom: 0.5px solid var(--border-tertiary);
+    display: grid; border-bottom: 1px solid var(--line);
     min-height: 46px;
   }
   .gantt-row:last-child { border-bottom: none; }
+  .gantt-row:hover { background: rgba(60,52,137,.028); }
+
   .row-info {
-    padding: 8px 12px;
-    border-right: 0.5px solid var(--border-tertiary);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 3px;
-    overflow: hidden;
+    padding: 8px 12px; border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; justify-content: center;
+    gap: 3px; overflow: hidden;
   }
   .row-name {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 13px; font-weight: 500; color: var(--text-1);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .row-badge {
-    font-size: 11px;
-    padding: 2px 7px;
-    border-radius: 4px;
-    display: inline-block;
-    width: fit-content;
+    font-size: 10.5px; padding: 2px 7px; border-radius: 4px;
+    display: inline-block; width: fit-content; white-space: nowrap;
   }
+
   .row-timeline { position: relative; overflow: hidden; min-height: 46px; }
   .bar {
-    position: absolute;
-    top: 8px; bottom: 8px;
+    position: absolute; top: 9px; bottom: 9px;
     border-radius: 4px;
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-    font-size: 11px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    transition: opacity .15s;
+    display: flex; align-items: center; padding: 0 8px;
+    font-size: 11px; font-weight: 500;
+    white-space: nowrap; overflow: hidden;
+    transition: filter .15s;
   }
+  .bar:hover { filter: brightness(1.08); }
+  .bar.clip-l { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+  .bar.clip-r { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+
   .today-line {
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 1.5px;
-    background: #E24B4A;
-    opacity: .6;
-    pointer-events: none;
-    z-index: 2;
+    position: absolute; top: 0; bottom: 0;
+    width: 1.5px; background: #E24B4A; opacity: .55;
+    pointer-events: none; z-index: 3;
   }
 
-  .empty-state {
-    text-align: center;
-    padding: 3.5rem 1rem;
-    color: var(--text-secondary);
-    font-size: 14px;
+  /* ── states ── */
+  .state-box {
+    text-align: center; padding: 3.5rem 1rem;
+    color: var(--text-2); font-size: 14px;
   }
-  .empty-state i { font-size: 32px; display: block; margin: 0 auto 10px; opacity: .4; }
-
-  /* legend */
-  .legend-wrap {
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    padding-top: 0.75rem;
-    border-top: 0.5px solid var(--border-tertiary);
-    margin-top: 1rem;
-  }
-  .legend-group-title {
-    font-size: 11px;
-    color: var(--text-tertiary);
-    margin-bottom: 5px;
-    font-weight: 500;
-    letter-spacing: .04em;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    margin-bottom: 4px;
-  }
-  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-
-  /* loading */
-  .loading {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: var(--text-tertiary);
-    font-size: 14px;
-  }
+  .state-box i { font-size: 30px; display: block; margin: 0 auto 10px; opacity: .35; }
+  .state-box small { opacity: .65; font-size: 12px; }
   .spinner {
-    width: 24px; height: 24px;
-    border: 2px solid var(--border-tertiary);
-    border-top-color: #534AB7;
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
+    width: 22px; height: 22px;
+    border: 2px solid var(--line); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin .7s linear infinite;
     margin: 0 auto 12px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── legend ── */
+  .legend-wrap {
+    display: flex; gap: 1.75rem; flex-wrap: wrap;
+    padding-top: 0.9rem; margin-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+  .legend-title {
+    font-size: 10.5px; color: var(--text-3); font-weight: 600;
+    letter-spacing: .05em; margin-bottom: 6px;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12px; color: var(--text-2); margin-bottom: 5px;
+  }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  .footnote {
+    font-size: 11.5px; color: var(--text-3);
+    text-align: center; margin-top: 1rem; line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 1rem .75rem 2rem; }
+    .card { padding: 1rem; }
+    .controls { gap: 8px; }
+  }
 </style>
 </head>
 <body>
@@ -301,8 +255,7 @@
 
   <div class="page-header">
     <div class="page-title">
-      <i class="ti ti-calendar-event"></i>
-      活動檔期甘特圖
+      <i class="ti ti-calendar-event"></i>活動檔期甘特圖
     </div>
     <div class="sync-info">
       <span class="sync-dot" id="syncDot"></span>
@@ -312,248 +265,290 @@
   </div>
 
   <div class="card">
-    <div class="toolbar">
-      <button class="btn icon-only" id="prevBtn"><i class="ti ti-chevron-left"></i></button>
-      <span class="range-label" id="rangeLabel"></span>
-      <button class="btn icon-only" id="nextBtn"><i class="ti ti-chevron-right"></i></button>
-      <button class="btn" id="todayBtn">今天</button>
-      <select id="viewSel">
-        <option value="30">30天</option>
-        <option value="60" selected>60天</option>
-        <option value="90">90天</option>
-        <option value="180">180天</option>
-      </select>
+
+    <div class="controls">
+      <div class="ctrl-group">
+        <label>顯示期間</label>
+        <div class="ctrl-row">
+          <input type="date" id="dStart">
+          <span class="date-sep">–</span>
+          <input type="date" id="dEnd">
+        </div>
+      </div>
+
+      <div class="ctrl-group">
+        <label>快速選擇</label>
+        <div class="preset-row" id="presets">
+          <button class="preset" data-preset="thisMonth">本月</button>
+          <button class="preset" data-preset="nextMonth">下個月</button>
+          <button class="preset on" data-preset="q">本季</button>
+          <button class="preset" data-preset="h1">上半年</button>
+          <button class="preset" data-preset="h2">下半年</button>
+          <button class="preset" data-preset="year">全年</button>
+          <button class="preset" data-preset="all">全部活動</button>
+        </div>
+      </div>
+
       <div class="spacer"></div>
+
+      <div class="ctrl-group">
+        <label>&nbsp;</label>
+        <button class="btn" id="todayBtn"><i class="ti ti-target"></i>跳到今天</button>
+      </div>
     </div>
 
     <div class="filters" id="filters"></div>
 
     <div class="gantt-wrap">
       <div class="gantt" id="gantt">
-        <div class="loading"><div class="spinner"></div>從 Google Sheets 讀取資料中…</div>
+        <div class="state-box"><div class="spinner"></div>從 Google Sheets 讀取資料中…</div>
       </div>
     </div>
 
     <div class="legend-wrap" id="legendArea"></div>
   </div>
 
+  <div class="footnote">
+    資料來源：Google Sheets「2026 行銷活動行事曆 › 總覽」<br>
+    在試算表更新後，點右上角重新整理即可同步
+  </div>
+
 </div>
 
 <script>
-// ── 設定區 ──────────────────────────────────────────
+/* ══════════════ 設定區 ══════════════ */
 const SHEET_ID   = '1Y9Lvd9WWhSosPDQewrWEDShJTpKlFfMuryEGYhzUYvo';
 const SHEET_NAME = '總覽';
-// ────────────────────────────────────────────────────
+/* ═════════════════════════════════════ */
 
 const CATS = {
-  '品牌異業':      { color: '#1D9E75', text: '#fff', group: 'main' },
-  '會員活動':      { color: '#534AB7', text: '#fff', group: 'main' },
-  '廣告置入':      { color: '#378ADD', text: '#fff', group: 'main' },
-  'KOL - 導購分潤':{ color: '#D85A30', text: '#fff', group: 'kol'  },
-  'KOL - 業配置入':{ color: '#BA7517', text: '#fff', group: 'kol'  },
-  'KOL - 綜合':   { color: '#D4537E', text: '#fff', group: 'kol'  },
+  '品牌異業':       { color: '#1D9E75', group: 'main' },
+  '會員活動':       { color: '#534AB7', group: 'main' },
+  '廣告置入':       { color: '#2E7FC4', group: 'main' },
+  'KOL - 導購分潤': { color: '#D85A30', group: 'kol'  },
+  'KOL - 業配置入': { color: '#B57614', group: 'kol'  },
+  'KOL - 綜合':     { color: '#C4437A', group: 'kol'  },
 };
-function getCat(name) {
-  return CATS[name] || { color: '#888780', text: '#fff', group: 'main' };
+const CAT_ORDER = Object.keys(CATS);
+function getCat(n){ return CATS[n] || { color:'#8e8d87', group:'main' }; }
+
+let allEvents = [];
+let activeFilters = new Set(CAT_ORDER);
+let rangeStart = null, rangeEnd = null;
+
+/* ── 日期工具 ── */
+function today(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+function toISO(d){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+}
+function fromISO(s){ const p=s.split('-'); const d=new Date(+p[0],+p[1]-1,+p[2]); d.setHours(0,0,0,0); return d; }
+function diffDays(a,b){ return Math.round((b-a)/86400000); }
+function parseDate(s){
+  if(!s) return null;
+  s = s.trim().replace(/\//g,'-');
+  const p = s.split('-');
+  if(p.length!==3) return null;
+  const d = new Date(+p[0], +p[1]-1, +p[2]);
+  d.setHours(0,0,0,0);
+  return isNaN(d.getTime()) ? null : d;
 }
 
-let viewDays    = 60;
-let offsetDays  = 0;
-let allEvents   = [];
-let activeFilters = new Set(Object.keys(CATS));
-
-// ── 日期工具 ────────────────────────────────────────
-function today()       { const d = new Date(); d.setHours(0,0,0,0); return d; }
-function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
-function toISO(d)      { return d.toISOString().slice(0,10); }
-function fromISO(s)    { const d = new Date(s + 'T00:00:00'); d.setHours(0,0,0,0); return d; }
-function diffDays(a,b) { return Math.round((b - a) / 86400000); }
-
-// 解析 2026/3/9 或 2026-03-09
-function parseDate(s) {
-  if (!s) return null;
-  s = s.trim().replace(/\//g, '-');
-  const parts = s.split('-');
-  if (parts.length !== 3) return null;
-  const y = parseInt(parts[0]), m = parseInt(parts[1]) - 1, d = parseInt(parts[2]);
-  const dt = new Date(y, m, d);
-  dt.setHours(0,0,0,0);
-  return isNaN(dt.getTime()) ? null : dt;
+/* ── 讀取 Sheets ── */
+async function fetchSheets(){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+  const r = await fetch(url);
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return parseCSV(await r.text());
 }
-
-// ── 讀取 Google Sheets ──────────────────────────────
-async function fetchSheets() {
-  setSyncState('loading');
-  const encoded = encodeURIComponent(SHEET_NAME);
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encoded}`;
-  const resp = await fetch(url);
-  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-  const text = await resp.text();
-  return parseCSV(text);
-}
-
-function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  if (lines.length < 2) return [];
-  // 第一行是標題：活動開始,活動結束,活動名稱,活動分類
-  const events = [];
-  for (let i = 1; i < lines.length; i++) {
-    const cols = splitCSVLine(lines[i]);
-    if (cols.length < 4) continue;
-    const start = parseDate(cols[0]);
-    const end   = parseDate(cols[1]);
-    const name  = cols[2].trim();
-    const cat   = cols[3].trim();
-    if (!start || !end || !name) continue;
-    events.push({ id: `r${i}`, start: toISO(start), end: toISO(end), name, cat });
+function splitCSVLine(line){
+  const out=[]; let cur='', inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){ if(inQ && line[i+1]==='"'){ cur+='"'; i++; } else inQ=!inQ; continue; }
+    if(c===',' && !inQ){ out.push(cur); cur=''; continue; }
+    cur+=c;
   }
-  return events;
+  out.push(cur); return out;
 }
-
-// 簡易 CSV 解析（處理引號）
-function splitCSVLine(line) {
-  const result = []; let cur = ''; let inQ = false;
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i];
-    if (c === '"') { inQ = !inQ; continue; }
-    if (c === ',' && !inQ) { result.push(cur); cur = ''; continue; }
-    cur += c;
+function parseCSV(text){
+  const lines = text.trim().split(/\r?\n/);
+  const evs = [];
+  for(let i=1;i<lines.length;i++){
+    const c = splitCSVLine(lines[i]);
+    if(c.length<4) continue;
+    const s=parseDate(c[0]), e=parseDate(c[1]);
+    const name=(c[2]||'').trim(), cat=(c[3]||'').trim();
+    if(!s||!e||!name) continue;
+    evs.push({ id:'r'+i, start:toISO(s), end:toISO(e), name, cat });
   }
-  result.push(cur);
-  return result;
+  return evs;
 }
 
-function setSyncState(state, time) {
-  const dot   = document.getElementById('syncDot');
-  const label = document.getElementById('syncLabel');
-  dot.className = 'sync-dot';
-  if (state === 'ok') {
-    dot.classList.add('ok');
-    label.textContent = `已同步 ${time}`;
-  } else if (state === 'err') {
-    dot.classList.add('err');
-    label.textContent = '讀取失敗，請確認試算表已公開';
-  } else {
-    label.textContent = '載入中…';
+/* ── 同步狀態 ── */
+function setSync(state, t){
+  const dot=document.getElementById('syncDot'), lb=document.getElementById('syncLabel');
+  dot.className='sync-dot';
+  if(state==='ok'){ dot.classList.add('ok'); lb.textContent='已同步 '+t; }
+  else if(state==='err'){ dot.classList.add('err'); lb.textContent='讀取失敗'; }
+  else lb.textContent='載入中…';
+}
+
+/* ── 期間設定 ── */
+function setRange(s, e){
+  rangeStart = s; rangeEnd = e;
+  document.getElementById('dStart').value = toISO(s);
+  document.getElementById('dEnd').value   = toISO(e);
+}
+function applyPreset(key){
+  const t = today(), y = t.getFullYear(), m = t.getMonth();
+  let s, e;
+  switch(key){
+    case 'thisMonth': s=new Date(y,m,1); e=new Date(y,m+1,0); break;
+    case 'nextMonth': s=new Date(y,m+1,1); e=new Date(y,m+2,0); break;
+    case 'q': { const q=Math.floor(m/3); s=new Date(y,q*3,1); e=new Date(y,q*3+3,0); break; }
+    case 'h1': s=new Date(y,0,1); e=new Date(y,5,30); break;
+    case 'h2': s=new Date(y,6,1); e=new Date(y,11,31); break;
+    case 'year': s=new Date(y,0,1); e=new Date(y,11,31); break;
+    case 'all': {
+      if(allEvents.length===0){ s=new Date(y,0,1); e=new Date(y,11,31); break; }
+      const starts=allEvents.map(x=>fromISO(x.start)), ends=allEvents.map(x=>fromISO(x.end));
+      s=new Date(Math.min(...starts)); e=new Date(Math.max(...ends));
+      s=addDays(s,-3); e=addDays(e,3);
+      break;
+    }
   }
+  s.setHours(0,0,0,0); e.setHours(0,0,0,0);
+  setRange(s,e); render();
+}
+function clearPresetHighlight(){
+  document.querySelectorAll('.preset').forEach(p=>p.classList.remove('on'));
 }
 
-async function loadAndRender() {
-  try {
-    allEvents = await fetchSheets();
-    const now = new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'});
-    setSyncState('ok', now);
-    buildFilters();
-    render();
-  } catch(e) {
-    setSyncState('err');
-    document.getElementById('gantt').innerHTML =
-      `<div class="empty-state"><i class="ti ti-wifi-off"></i>無法讀取試算表<br><small style="opacity:.6">請確認「知道連結的人可以檢視」已開啟</small></div>`;
-  }
-}
+/* ── 篩選膠囊 ── */
+function buildFilters(){
+  const used = [...new Set(allEvents.map(e=>e.cat))].filter(c=>CATS[c])
+                .sort((a,b)=>CAT_ORDER.indexOf(a)-CAT_ORDER.indexOf(b));
+  const box = document.getElementById('filters');
+  box.innerHTML='';
 
-// ── 篩選器 ──────────────────────────────────────────
-function buildFilters() {
-  const usedCats = [...new Set(allEvents.map(e => e.cat))].filter(c => CATS[c]);
-  const container = document.getElementById('filters');
-  container.innerHTML = '';
+  const allOn = used.every(c=>activeFilters.has(c));
+  const ap = document.createElement('span');
+  ap.className = 'pill ' + (allOn?'on':'off');
+  ap.style.cssText = allOn ? `border-color:${'#3C3489'};color:#3C3489` : '';
+  ap.textContent = '全部顯示';
+  ap.onclick = ()=>{ activeFilters=new Set(CAT_ORDER); buildFilters(); render(); };
+  box.appendChild(ap);
 
-  // 全選
-  const allPill = document.createElement('span');
-  allPill.className = 'pill ' + (activeFilters.size === usedCats.length ? 'active' : 'inactive');
-  allPill.style.borderColor = activeFilters.size === usedCats.length ? '#534AB7' : '';
-  allPill.style.color       = activeFilters.size === usedCats.length ? '#534AB7' : '';
-  allPill.innerHTML = '全部顯示';
-  allPill.addEventListener('click', () => {
-    activeFilters = new Set(Object.keys(CATS));
-    buildFilters(); render();
-  });
-  container.appendChild(allPill);
-
-  for (const cat of usedCats) {
-    const c    = getCat(cat);
-    const pill = document.createElement('span');
-    const on   = activeFilters.has(cat);
-    pill.className = 'pill ' + (on ? 'active' : 'inactive');
-    if (on) { pill.style.borderColor = c.color; pill.style.color = c.color; }
-    pill.innerHTML = `<span class="dot" style="background:${c.color}"></span>${cat}`;
-    pill.addEventListener('click', () => {
-      if (activeFilters.has(cat)) activeFilters.delete(cat);
-      else activeFilters.add(cat);
+  for(const cat of used){
+    const c = getCat(cat), on = activeFilters.has(cat);
+    const p = document.createElement('span');
+    p.className = 'pill ' + (on?'on':'off');
+    if(on) p.style.cssText = `border-color:${c.color};color:${c.color};background:${c.color}0e`;
+    p.innerHTML = `<span class="dot" style="background:${c.color}"></span>${cat}`;
+    p.onclick = ()=>{
+      activeFilters.has(cat) ? activeFilters.delete(cat) : activeFilters.add(cat);
       buildFilters(); render();
-    });
-    container.appendChild(pill);
+    };
+    box.appendChild(p);
   }
 }
 
-// ── 渲染甘特圖 ──────────────────────────────────────
-function render() {
-  const base = addDays(today(), offsetDays);
-  const end  = addDays(base, viewDays - 1);
+/* ── 渲染 ── */
+function render(){
+  if(!rangeStart||!rangeEnd) return;
+  const base=rangeStart, end=rangeEnd;
+  const totalDays = diffDays(base,end)+1;
+  if(totalDays<1){
+    document.getElementById('gantt').innerHTML =
+      `<div class="state-box"><i class="ti ti-alert-circle"></i>結束日期不能早於開始日期</div>`;
+    return;
+  }
 
-  document.getElementById('rangeLabel').textContent =
-    base.toLocaleDateString('zh-TW', {year:'numeric', month:'short', day:'numeric'}) + ' – ' +
-    end.toLocaleDateString('zh-TW', {month:'short', day:'numeric'});
-
-  const DAY_W  = Math.max(12, Math.floor(600 / viewDays));
-  const INFO_W = 190;
+  const INFO_W = 200;
+  const TL_W   = 660;
+  const dayW   = TL_W / totalDays;
+  const showDayNums = dayW >= 13;
   const todayISO = toISO(today());
 
-  // 月份 + 日期標題
-  let monthsHtml = '', daysHtml = '';
-  let cur = new Date(base), monthName = '', monthStart = 0, segments = [];
-  for (let i = 0; i < viewDays; i++) {
-    const mn = cur.toLocaleDateString('zh-TW', {month:'short'});
-    if (mn !== monthName) {
-      if (monthName) segments.push({name: monthName, count: i - monthStart});
-      monthName = mn; monthStart = i;
+  /* 月份列 */
+  let monthsHtml='';
+  {
+    const segs=[];
+    let cur=new Date(base);
+    let curKey=null, curLabel='', segStart=0;
+    for(let i=0;i<totalDays;i++){
+      const key = cur.getFullYear()+'-'+cur.getMonth();
+      if(key!==curKey){
+        if(curKey!==null) segs.push({label:curLabel, count:i-segStart});
+        curKey = key;
+        segStart = i;
+        curLabel = (cur.getMonth()===0 || i===0)
+          ? `${cur.getFullYear()}/${cur.getMonth()+1}月`
+          : `${cur.getMonth()+1}月`;
+      }
+      cur=addDays(cur,1);
     }
-    const isT = toISO(cur) === todayISO;
-    daysHtml += `<div class="day-cell${isT?' is-today':''}" style="width:${DAY_W}px">${cur.getDate()}</div>`;
-    cur = addDays(cur, 1);
+    segs.push({label:curLabel, count:totalDays-segStart});
+    for(const s of segs)
+      monthsHtml += `<div class="month-cell" style="width:${s.count*dayW}px">${s.count*dayW>34?s.label:''}</div>`;
   }
-  segments.push({name: monthName, count: viewDays - monthStart});
-  for (const s of segments)
-    monthsHtml += `<div class="month-cell" style="width:${s.count * DAY_W}px">${s.name}</div>`;
 
-  const todayOff = diffDays(base, today());
-  const todayPx  = (todayOff >= 0 && todayOff < viewDays) ? todayOff * DAY_W : -9999;
+  /* 刻度列 */
+  let ticksHtml='';
+  {
+    let cur=new Date(base);
+    for(let i=0;i<totalDays;i++){
+      const isT = toISO(cur)===todayISO;
+      const dow = cur.getDay();
+      const wk  = (dow===0||dow===6) ? ' weekend' : '';
+      const lbl = showDayNums ? cur.getDate() : (cur.getDate()===1 ? '·' : '');
+      ticksHtml += `<div class="tick-cell${isT?' is-today':''}${wk}" style="width:${dayW}px">${lbl}</div>`;
+      cur=addDays(cur,1);
+    }
+  }
 
-  // 篩選 + 視窗內的活動
-  const catOrder = Object.keys(CATS);
+  const tOff = diffDays(base, today());
+  const todayPx = (tOff>=0 && tOff<totalDays) ? tOff*dayW : -9999;
+
+  /* 篩出可見活動 */
   const visible = allEvents
-    .filter(e => {
-      if (!activeFilters.has(e.cat)) return false;
-      const s = fromISO(e.start), en = fromISO(e.end);
-      return en >= base && s <= end;
+    .filter(e=>{
+      if(!activeFilters.has(e.cat)) return false;
+      return fromISO(e.end) >= base && fromISO(e.start) <= end;
     })
-    .sort((a, b) => {
-      const oi = catOrder.indexOf(a.cat) - catOrder.indexOf(b.cat);
-      return oi !== 0 ? oi : a.start.localeCompare(b.start);
+    .sort((a,b)=>{
+      const o = CAT_ORDER.indexOf(a.cat) - CAT_ORDER.indexOf(b.cat);
+      return o!==0 ? o : a.start.localeCompare(b.start);
     });
 
-  let rows = '';
-  if (visible.length === 0) {
-    rows = `<div class="empty-state"><i class="ti ti-calendar-off"></i>這個時間範圍內沒有符合的活動</div>`;
+  let rows='';
+  if(visible.length===0){
+    rows = `<div class="state-box"><i class="ti ti-calendar-off"></i>這個期間沒有符合的活動<br><small>試著調整日期範圍或篩選條件</small></div>`;
   } else {
-    for (const e of visible) {
-      const s   = fromISO(e.start), en = fromISO(e.end);
-      const s0  = Math.max(0, diffDays(base, s));
-      const e0  = Math.min(viewDays, diffDays(base, en) + 1);
-      const bL  = s0 * DAY_W;
-      const bW  = Math.max(DAY_W, (e0 - s0) * DAY_W);
-      const cat = getCat(e.cat);
+    for(const e of visible){
+      const es=fromISO(e.start), ee=fromISO(e.end);
+      const rawS = diffDays(base, es);
+      const rawE = diffDays(base, ee)+1;
+      const s0 = Math.max(0, rawS);
+      const e0 = Math.min(totalDays, rawE);
+      const bL = s0*dayW;
+      const bW = Math.max(4, (e0-s0)*dayW);
+      const c  = getCat(e.cat);
+      const clip = (rawS<0?' clip-l':'') + (rawE>totalDays?' clip-r':'');
+      const days = diffDays(es,ee)+1;
       rows += `
         <div class="gantt-row" style="grid-template-columns:${INFO_W}px 1fr">
           <div class="row-info">
             <div class="row-name" title="${e.name}">${e.name}</div>
-            <span class="row-badge" style="background:${cat.color}22;color:${cat.color}">${e.cat}</span>
+            <span class="row-badge" style="background:${c.color}1a;color:${c.color}">${e.cat}</span>
           </div>
           <div class="row-timeline">
             <div class="today-line" style="left:${todayPx}px"></div>
-            <div class="bar" style="left:${bL}px;width:${bW}px;background:${cat.color};color:${cat.text}"
-                 title="${e.name}｜${e.start} ~ ${e.end}">
-              ${bW > 52 ? e.name : ''}
+            <div class="bar${clip}" style="left:${bL}px;width:${bW}px;background:${c.color};color:#fff"
+                 title="${e.name}&#10;${e.start} ~ ${e.end}（${days} 天）">
+              ${bW>58 ? e.name : ''}
             </div>
           </div>
         </div>`;
@@ -565,47 +560,72 @@ function render() {
       <div class="head-label">活動名稱</div>
       <div>
         <div class="months-row">${monthsHtml}</div>
-        <div class="days-row">${daysHtml}</div>
+        <div class="ticks-row">${ticksHtml}</div>
       </div>
     </div>
-    ${rows}
-  `;
+    ${rows}`;
 
   renderLegend();
 }
 
-function renderLegend() {
-  const usedCats = [...new Set(allEvents.map(e => e.cat))].filter(c => CATS[c]);
-  const main = usedCats.filter(k => CATS[k].group === 'main');
-  const kol  = usedCats.filter(k => CATS[k].group === 'kol');
-  let html = '';
-  if (main.length) {
-    html += '<div>';
-    for (const k of main) {
-      const c = CATS[k];
-      html += `<div class="legend-item"><span class="legend-dot" style="background:${c.color}"></span>${k}</div>`;
-    }
-    html += '</div>';
+function renderLegend(){
+  const used=[...new Set(allEvents.map(e=>e.cat))].filter(c=>CATS[c]);
+  const main=used.filter(k=>CATS[k].group==='main').sort((a,b)=>CAT_ORDER.indexOf(a)-CAT_ORDER.indexOf(b));
+  const kol =used.filter(k=>CATS[k].group==='kol').sort((a,b)=>CAT_ORDER.indexOf(a)-CAT_ORDER.indexOf(b));
+  let h='';
+  if(main.length){
+    h+='<div><div class="legend-title">合作類型</div>';
+    for(const k of main) h+=`<div class="legend-item"><span class="legend-dot" style="background:${CATS[k].color}"></span>${k}</div>`;
+    h+='</div>';
   }
-  if (kol.length) {
-    html += '<div><div class="legend-group-title">KOL</div>';
-    for (const k of kol) {
-      const c = CATS[k];
-      html += `<div class="legend-item"><span class="legend-dot" style="background:${c.color}"></span>${k.replace('KOL - ','')}</div>`;
-    }
-    html += '</div>';
+  if(kol.length){
+    h+='<div><div class="legend-title">KOL</div>';
+    for(const k of kol) h+=`<div class="legend-item"><span class="legend-dot" style="background:${CATS[k].color}"></span>${k.replace('KOL - ','')}</div>`;
+    h+='</div>';
   }
-  document.getElementById('legendArea').innerHTML = html;
+  document.getElementById('legendArea').innerHTML=h;
 }
 
-// ── 事件綁定 ────────────────────────────────────────
-document.getElementById('prevBtn').addEventListener('click',  () => { offsetDays -= viewDays; render(); });
-document.getElementById('nextBtn').addEventListener('click',  () => { offsetDays += viewDays; render(); });
-document.getElementById('todayBtn').addEventListener('click', () => { offsetDays = 0; render(); });
-document.getElementById('viewSel').addEventListener('change', e => { viewDays = parseInt(e.target.value); render(); });
-document.getElementById('refreshBtn').addEventListener('click', loadAndRender);
+/* ── 載入 ── */
+async function loadAll(){
+  setSync('loading');
+  try{
+    allEvents = await fetchSheets();
+    setSync('ok', new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}));
+    buildFilters();
+    if(!rangeStart) applyPreset('q');
+    else render();
+  }catch(err){
+    setSync('err');
+    document.getElementById('gantt').innerHTML =
+      `<div class="state-box"><i class="ti ti-cloud-off"></i>無法讀取試算表<br><small>請確認共用設定為「知道連結的人 → 檢視者」</small></div>`;
+  }
+}
 
-loadAndRender();
+/* ── 事件綁定 ── */
+document.getElementById('dStart').addEventListener('change', e=>{
+  if(!e.target.value) return;
+  rangeStart = fromISO(e.target.value); clearPresetHighlight(); render();
+});
+document.getElementById('dEnd').addEventListener('change', e=>{
+  if(!e.target.value) return;
+  rangeEnd = fromISO(e.target.value); clearPresetHighlight(); render();
+});
+document.querySelectorAll('.preset').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    clearPresetHighlight(); btn.classList.add('on');
+    applyPreset(btn.dataset.preset);
+  });
+});
+document.getElementById('todayBtn').addEventListener('click', ()=>{
+  clearPresetHighlight();
+  const t=today();
+  setRange(addDays(t,-14), addDays(t,45));
+  render();
+});
+document.getElementById('refreshBtn').addEventListener('click', loadAll);
+
+loadAll();
 </script>
 </body>
 </html>
