@@ -101,6 +101,7 @@
   .btn.icon-only { padding: 6px 9px; }
   .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn.primary:hover { background: #4b42a8; border-color: #4b42a8; }
+  .btn.sm { font-size: 12px; padding: 4px 10px; }
 
   .preset-row { display: flex; gap: 5px; flex-wrap: wrap; }
   .preset {
@@ -120,7 +121,7 @@
   .spacer { flex: 1; min-width: 4px; }
 
   /* ── filters ── */
-  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: .85rem; }
   .pill {
     font-size: 12px; padding: 4px 11px;
     border-radius: 20px;
@@ -135,6 +136,73 @@
   .pill.on { font-weight: 500; }
   .pill.off { opacity: .4; }
 
+  /* ── item manager ── */
+  .manager-bar {
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap; margin-bottom: .85rem;
+  }
+  .manager-toggle {
+    font-family: inherit; font-size: 12px;
+    padding: 5px 11px; border-radius: var(--radius-md);
+    border: 1px solid var(--line-strong);
+    background: var(--bg-card); color: var(--text-2);
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    transition: all .12s;
+  }
+  .manager-toggle:hover { background: var(--bg-soft); }
+  .manager-toggle.open { border-color: var(--accent); color: var(--accent); background: rgba(60,52,137,.05); }
+  .hidden-count {
+    font-size: 11px; color: var(--text-3);
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+
+  .manager-panel {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-soft);
+    padding: .9rem 1rem;
+    margin-bottom: .9rem;
+  }
+  .manager-actions {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    padding-bottom: .7rem; margin-bottom: .7rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .manager-group { margin-bottom: .8rem; }
+  .manager-group:last-child { margin-bottom: 0; }
+  .manager-group-head {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 11px; font-weight: 600; color: var(--text-2);
+    letter-spacing: .03em; margin-bottom: 6px;
+  }
+  .manager-group-head .gdot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  .manager-group-head button {
+    font-family: inherit; font-size: 10.5px;
+    background: none; border: none; color: var(--text-3);
+    cursor: pointer; text-decoration: underline; padding: 0;
+  }
+  .manager-group-head button:hover { color: var(--accent); }
+
+  .item-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 2px 14px;
+  }
+  .item-check {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12.5px; color: var(--text-1);
+    padding: 3px 5px; border-radius: 5px;
+    cursor: pointer; user-select: none;
+    transition: background .1s;
+  }
+  .item-check:hover { background: rgba(0,0,0,.035); }
+  .item-check input { cursor: pointer; accent-color: var(--accent); flex-shrink: 0; margin: 0; }
+  .item-check span {
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .item-check.off span { color: var(--text-3); text-decoration: line-through; }
+  .item-date { font-size: 10.5px; color: var(--text-3); flex-shrink: 0; margin-left: auto; }
+
   /* ── gantt ── */
   .gantt-wrap { overflow-x: auto; }
   .gantt {
@@ -142,15 +210,18 @@
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     overflow: hidden;
+    background: var(--bg-card);
   }
   .gantt-head {
     display: grid; background: var(--bg-soft);
     border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 5;
   }
   .head-label {
     font-size: 12px; color: var(--text-2); font-weight: 500;
     padding: 8px 12px; border-right: 1px solid var(--line);
     display: flex; align-items: center;
+    background: var(--bg-soft);
   }
   .months-row { display: flex; border-bottom: 1px solid var(--line); }
   .month-cell {
@@ -175,10 +246,10 @@
   .gantt-row:hover { background: rgba(60,52,137,.028); }
 
   .row-info {
-    padding: 8px 12px; border-right: 1px solid var(--line);
-    display: flex; flex-direction: column; justify-content: center;
-    gap: 3px; overflow: hidden;
+    padding: 8px 10px 8px 12px; border-right: 1px solid var(--line);
+    display: flex; align-items: center; gap: 8px; overflow: hidden;
   }
+  .row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
   .row-name {
     font-size: 13px; font-weight: 500; color: var(--text-1);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -187,6 +258,14 @@
     font-size: 10.5px; padding: 2px 7px; border-radius: 4px;
     display: inline-block; width: fit-content; white-space: nowrap;
   }
+  .row-hide {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-3); font-size: 15px; padding: 3px;
+    border-radius: 5px; flex-shrink: 0;
+    opacity: 0; transition: opacity .12s, background .12s, color .12s;
+  }
+  .gantt-row:hover .row-hide { opacity: 1; }
+  .row-hide:hover { background: rgba(0,0,0,.06); color: var(--text-1); }
 
   .row-timeline { position: relative; overflow: hidden; min-height: 46px; }
   .bar {
@@ -243,10 +322,31 @@
     text-align: center; margin-top: 1rem; line-height: 1.6;
   }
 
+  /* ── 截圖模式 ── */
+  body.shot-mode { background: #fff; padding-top: 1rem; }
+  body.shot-mode .controls,
+  body.shot-mode .manager-bar,
+  body.shot-mode .manager-panel,
+  body.shot-mode .footnote,
+  body.shot-mode .sync-info { display: none !important; }
+  body.shot-mode .card { border: none; padding: 0; }
+  body.shot-mode .page-header { margin-bottom: .75rem; }
+  body.shot-mode .row-hide { display: none; }
+  body.shot-mode .filters { margin-bottom: .75rem; }
+  body.shot-mode .shot-exit { display: inline-flex !important; }
+  .shot-exit { display: none; }
+
   @media (max-width: 640px) {
     body { padding: 1rem .75rem 2rem; }
     .card { padding: 1rem; }
     .controls { gap: 8px; }
+    .item-list { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .controls, .manager-bar, .manager-panel, .footnote, .sync-info, .row-hide { display: none !important; }
+    .card { border: none; padding: 0; }
   }
 </style>
 </head>
@@ -262,6 +362,7 @@
       <span id="syncLabel">載入中…</span>
       <button class="btn icon-only" id="refreshBtn" title="重新讀取"><i class="ti ti-refresh"></i></button>
     </div>
+    <button class="btn sm shot-exit" id="shotExit"><i class="ti ti-x"></i>離開截圖模式</button>
   </div>
 
   <div class="card">
@@ -293,11 +394,32 @@
 
       <div class="ctrl-group">
         <label>&nbsp;</label>
-        <button class="btn" id="todayBtn"><i class="ti ti-target"></i>跳到今天</button>
+        <div class="ctrl-row">
+          <button class="btn" id="todayBtn"><i class="ti ti-target"></i>跳到今天</button>
+          <button class="btn" id="shotBtn"><i class="ti ti-camera"></i>截圖模式</button>
+        </div>
       </div>
     </div>
 
     <div class="filters" id="filters"></div>
+
+    <div class="manager-bar">
+      <button class="manager-toggle" id="mgrToggle">
+        <i class="ti ti-list-check"></i>挑選顯示項目
+        <i class="ti ti-chevron-down" id="mgrChevron" style="font-size:13px"></i>
+      </button>
+      <span class="hidden-count" id="hiddenCount"></span>
+    </div>
+
+    <div class="manager-panel" id="mgrPanel" style="display:none">
+      <div class="manager-actions">
+        <button class="btn sm" id="mgrAll"><i class="ti ti-eye"></i>全部顯示</button>
+        <button class="btn sm" id="mgrNone"><i class="ti ti-eye-off"></i>全部隱藏</button>
+        <button class="btn sm" id="mgrInvert"><i class="ti ti-switch-horizontal"></i>反向選擇</button>
+        <button class="btn sm" id="mgrInRange"><i class="ti ti-calendar-check"></i>只留期間內</button>
+      </div>
+      <div id="mgrGroups"></div>
+    </div>
 
     <div class="gantt-wrap">
       <div class="gantt" id="gantt">
@@ -332,8 +454,9 @@ const CATS = {
 const CAT_ORDER = Object.keys(CATS);
 function getCat(n){ return CATS[n] || { color:'#8e8d87', group:'main' }; }
 
-let allEvents = [];
+let allEvents     = [];
 let activeFilters = new Set(CAT_ORDER);
+let hiddenIds     = new Set();   // 被個別隱藏的活動
 let rangeStart = null, rangeEnd = null;
 
 /* ── 日期工具 ── */
@@ -345,6 +468,7 @@ function toISO(d){
 }
 function fromISO(s){ const p=s.split('-'); const d=new Date(+p[0],+p[1]-1,+p[2]); d.setHours(0,0,0,0); return d; }
 function diffDays(a,b){ return Math.round((b-a)/86400000); }
+function shortDate(iso){ const p=iso.split('-'); return `${+p[1]}/${+p[2]}`; }
 function parseDate(s){
   if(!s) return null;
   s = s.trim().replace(/\//g,'-');
@@ -420,13 +544,13 @@ function applyPreset(key){
     }
   }
   s.setHours(0,0,0,0); e.setHours(0,0,0,0);
-  setRange(s,e); render();
+  setRange(s,e); refreshAll();
 }
 function clearPresetHighlight(){
   document.querySelectorAll('.preset').forEach(p=>p.classList.remove('on'));
 }
 
-/* ── 篩選膠囊 ── */
+/* ── 分類篩選膠囊 ── */
 function buildFilters(){
   const used = [...new Set(allEvents.map(e=>e.cat))].filter(c=>CATS[c])
                 .sort((a,b)=>CAT_ORDER.indexOf(a)-CAT_ORDER.indexOf(b));
@@ -436,9 +560,9 @@ function buildFilters(){
   const allOn = used.every(c=>activeFilters.has(c));
   const ap = document.createElement('span');
   ap.className = 'pill ' + (allOn?'on':'off');
-  ap.style.cssText = allOn ? `border-color:${'#3C3489'};color:#3C3489` : '';
-  ap.textContent = '全部顯示';
-  ap.onclick = ()=>{ activeFilters=new Set(CAT_ORDER); buildFilters(); render(); };
+  if(allOn) ap.style.cssText = 'border-color:#3C3489;color:#3C3489;background:rgba(60,52,137,.06)';
+  ap.textContent = '全部類型';
+  ap.onclick = ()=>{ activeFilters=new Set(CAT_ORDER); refreshAll(); };
   box.appendChild(ap);
 
   for(const cat of used){
@@ -449,13 +573,93 @@ function buildFilters(){
     p.innerHTML = `<span class="dot" style="background:${c.color}"></span>${cat}`;
     p.onclick = ()=>{
       activeFilters.has(cat) ? activeFilters.delete(cat) : activeFilters.add(cat);
-      buildFilters(); render();
+      refreshAll();
     };
     box.appendChild(p);
   }
 }
 
-/* ── 渲染 ── */
+/* ── 項目挑選面板 ── */
+function eventsInRange(){
+  if(!rangeStart||!rangeEnd) return allEvents;
+  return allEvents.filter(e=> fromISO(e.end)>=rangeStart && fromISO(e.start)<=rangeEnd );
+}
+
+function buildManager(){
+  // 只列出「分類有開啟」的活動，依分類分組
+  const pool = allEvents
+    .filter(e=>activeFilters.has(e.cat))
+    .sort((a,b)=>{
+      const o=CAT_ORDER.indexOf(a.cat)-CAT_ORDER.indexOf(b.cat);
+      return o!==0?o:a.start.localeCompare(b.start);
+    });
+
+  const byCat = {};
+  for(const e of pool){ (byCat[e.cat] ||= []).push(e); }
+
+  const wrap = document.getElementById('mgrGroups');
+  wrap.innerHTML = '';
+
+  if(pool.length===0){
+    wrap.innerHTML = `<div style="font-size:12px;color:var(--text-3);padding:4px 0">目前沒有可挑選的活動</div>`;
+  }
+
+  for(const cat of CAT_ORDER){
+    const list = byCat[cat];
+    if(!list || !list.length) continue;
+    const c = getCat(cat);
+
+    const g = document.createElement('div');
+    g.className = 'manager-group';
+
+    const head = document.createElement('div');
+    head.className = 'manager-group-head';
+    head.innerHTML = `<span class="gdot" style="background:${c.color}"></span>${cat}
+      <span style="color:var(--text-3);font-weight:400">（${list.length}）</span>`;
+
+    const bOn = document.createElement('button');
+    bOn.textContent = '全選';
+    bOn.onclick = ()=>{ list.forEach(e=>hiddenIds.delete(e.id)); refreshAll(); };
+    const bOff = document.createElement('button');
+    bOff.textContent = '全不選';
+    bOff.style.marginLeft = '2px';
+    bOff.onclick = ()=>{ list.forEach(e=>hiddenIds.add(e.id)); refreshAll(); };
+    head.appendChild(bOn); head.appendChild(bOff);
+    g.appendChild(head);
+
+    const ul = document.createElement('div');
+    ul.className = 'item-list';
+    for(const e of list){
+      const on = !hiddenIds.has(e.id);
+      const lab = document.createElement('label');
+      lab.className = 'item-check' + (on?'':' off');
+      lab.title = `${e.name}｜${e.start} ~ ${e.end}`;
+      lab.innerHTML = `
+        <input type="checkbox" ${on?'checked':''}>
+        <span>${e.name}</span>
+        <span class="item-date">${shortDate(e.start)}–${shortDate(e.end)}</span>`;
+      lab.querySelector('input').onchange = ev=>{
+        ev.target.checked ? hiddenIds.delete(e.id) : hiddenIds.add(e.id);
+        refreshAll();
+      };
+      ul.appendChild(lab);
+    }
+    g.appendChild(ul);
+    wrap.appendChild(g);
+  }
+
+  // 隱藏計數
+  const activePool = allEvents.filter(e=>activeFilters.has(e.cat));
+  const nHidden = activePool.filter(e=>hiddenIds.has(e.id)).length;
+  const cnt = document.getElementById('hiddenCount');
+  cnt.innerHTML = nHidden > 0
+    ? `<i class="ti ti-eye-off" style="font-size:13px"></i>已隱藏 ${nHidden} 項
+       <button class="btn sm" style="margin-left:4px" onclick="window.__showAll()">全部顯示</button>`
+    : '';
+}
+window.__showAll = ()=>{ hiddenIds.clear(); refreshAll(); };
+
+/* ── 渲染甘特圖 ── */
 function render(){
   if(!rangeStart||!rangeEnd) return;
   const base=rangeStart, end=rangeEnd;
@@ -476,14 +680,12 @@ function render(){
   let monthsHtml='';
   {
     const segs=[];
-    let cur=new Date(base);
-    let curKey=null, curLabel='', segStart=0;
+    let cur=new Date(base), curKey=null, curLabel='', segStart=0;
     for(let i=0;i<totalDays;i++){
       const key = cur.getFullYear()+'-'+cur.getMonth();
       if(key!==curKey){
         if(curKey!==null) segs.push({label:curLabel, count:i-segStart});
-        curKey = key;
-        segStart = i;
+        curKey=key; segStart=i;
         curLabel = (cur.getMonth()===0 || i===0)
           ? `${cur.getFullYear()}/${cur.getMonth()+1}月`
           : `${cur.getMonth()+1}月`;
@@ -512,10 +714,11 @@ function render(){
   const tOff = diffDays(base, today());
   const todayPx = (tOff>=0 && tOff<totalDays) ? tOff*dayW : -9999;
 
-  /* 篩出可見活動 */
+  /* 篩出可見活動：分類開啟 + 未被個別隱藏 + 落在期間內 */
   const visible = allEvents
     .filter(e=>{
       if(!activeFilters.has(e.cat)) return false;
+      if(hiddenIds.has(e.id)) return false;
       return fromISO(e.end) >= base && fromISO(e.start) <= end;
     })
     .sort((a,b)=>{
@@ -525,7 +728,7 @@ function render(){
 
   let rows='';
   if(visible.length===0){
-    rows = `<div class="state-box"><i class="ti ti-calendar-off"></i>這個期間沒有符合的活動<br><small>試著調整日期範圍或篩選條件</small></div>`;
+    rows = `<div class="state-box"><i class="ti ti-calendar-off"></i>這個期間沒有可顯示的活動<br><small>試著調整日期範圍、分類篩選，或在「挑選顯示項目」中開啟</small></div>`;
   } else {
     for(const e of visible){
       const es=fromISO(e.start), ee=fromISO(e.end);
@@ -541,8 +744,11 @@ function render(){
       rows += `
         <div class="gantt-row" style="grid-template-columns:${INFO_W}px 1fr">
           <div class="row-info">
-            <div class="row-name" title="${e.name}">${e.name}</div>
-            <span class="row-badge" style="background:${c.color}1a;color:${c.color}">${e.cat}</span>
+            <div class="row-text">
+              <div class="row-name" title="${e.name}">${e.name}</div>
+              <span class="row-badge" style="background:${c.color}1a;color:${c.color}">${e.cat}</span>
+            </div>
+            <button class="row-hide" data-hide="${e.id}" title="隱藏這一項"><i class="ti ti-eye-off"></i></button>
           </div>
           <div class="row-timeline">
             <div class="today-line" style="left:${todayPx}px"></div>
@@ -565,11 +771,15 @@ function render(){
     </div>
     ${rows}`;
 
-  renderLegend();
+  document.querySelectorAll('[data-hide]').forEach(b=>{
+    b.onclick = ()=>{ hiddenIds.add(b.dataset.hide); refreshAll(); };
+  });
+
+  renderLegend(visible);
 }
 
-function renderLegend(){
-  const used=[...new Set(allEvents.map(e=>e.cat))].filter(c=>CATS[c]);
+function renderLegend(visible){
+  const used=[...new Set(visible.map(e=>e.cat))].filter(c=>CATS[c]);
   const main=used.filter(k=>CATS[k].group==='main').sort((a,b)=>CAT_ORDER.indexOf(a)-CAT_ORDER.indexOf(b));
   const kol =used.filter(k=>CATS[k].group==='kol').sort((a,b)=>CAT_ORDER.indexOf(a)-CAT_ORDER.indexOf(b));
   let h='';
@@ -586,15 +796,21 @@ function renderLegend(){
   document.getElementById('legendArea').innerHTML=h;
 }
 
+/* 一次更新三個區塊 */
+function refreshAll(){
+  buildFilters();
+  buildManager();
+  render();
+}
+
 /* ── 載入 ── */
 async function loadAll(){
   setSync('loading');
   try{
     allEvents = await fetchSheets();
     setSync('ok', new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}));
-    buildFilters();
     if(!rangeStart) applyPreset('q');
-    else render();
+    else refreshAll();
   }catch(err){
     setSync('err');
     document.getElementById('gantt').innerHTML =
@@ -605,11 +821,11 @@ async function loadAll(){
 /* ── 事件綁定 ── */
 document.getElementById('dStart').addEventListener('change', e=>{
   if(!e.target.value) return;
-  rangeStart = fromISO(e.target.value); clearPresetHighlight(); render();
+  rangeStart = fromISO(e.target.value); clearPresetHighlight(); refreshAll();
 });
 document.getElementById('dEnd').addEventListener('change', e=>{
   if(!e.target.value) return;
-  rangeEnd = fromISO(e.target.value); clearPresetHighlight(); render();
+  rangeEnd = fromISO(e.target.value); clearPresetHighlight(); refreshAll();
 });
 document.querySelectorAll('.preset').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -621,9 +837,45 @@ document.getElementById('todayBtn').addEventListener('click', ()=>{
   clearPresetHighlight();
   const t=today();
   setRange(addDays(t,-14), addDays(t,45));
-  render();
+  refreshAll();
 });
 document.getElementById('refreshBtn').addEventListener('click', loadAll);
+
+/* 項目面板開合 */
+const mgrPanel = document.getElementById('mgrPanel');
+const mgrToggle = document.getElementById('mgrToggle');
+const mgrChevron = document.getElementById('mgrChevron');
+mgrToggle.addEventListener('click', ()=>{
+  const open = mgrPanel.style.display === 'none';
+  mgrPanel.style.display = open ? '' : 'none';
+  mgrToggle.classList.toggle('open', open);
+  mgrChevron.className = open ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
+  mgrChevron.style.fontSize = '13px';
+});
+
+document.getElementById('mgrAll').onclick    = ()=>{ hiddenIds.clear(); refreshAll(); };
+document.getElementById('mgrNone').onclick   = ()=>{
+  allEvents.filter(e=>activeFilters.has(e.cat)).forEach(e=>hiddenIds.add(e.id));
+  refreshAll();
+};
+document.getElementById('mgrInvert').onclick = ()=>{
+  allEvents.filter(e=>activeFilters.has(e.cat)).forEach(e=>{
+    hiddenIds.has(e.id) ? hiddenIds.delete(e.id) : hiddenIds.add(e.id);
+  });
+  refreshAll();
+};
+document.getElementById('mgrInRange').onclick = ()=>{
+  const inR = new Set(eventsInRange().map(e=>e.id));
+  allEvents.forEach(e=>{ inR.has(e.id) ? hiddenIds.delete(e.id) : hiddenIds.add(e.id); });
+  refreshAll();
+};
+
+/* 截圖模式 */
+document.getElementById('shotBtn').onclick  = ()=> document.body.classList.add('shot-mode');
+document.getElementById('shotExit').onclick = ()=> document.body.classList.remove('shot-mode');
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') document.body.classList.remove('shot-mode');
+});
 
 loadAll();
 </script>
